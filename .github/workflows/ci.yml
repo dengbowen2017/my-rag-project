@@ -1,0 +1,27 @@
+name: Repository CI
+
+on:
+  push:
+    branches:
+      - main
+      - 'stage-v[0-9][0-9]'
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  python-syntax:
+    name: Python syntax
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version-file: .python-version
+      - name: Compile tracked Python files
+        run: git ls-files -z '*.py' | xargs -0 -r python -m py_compile
